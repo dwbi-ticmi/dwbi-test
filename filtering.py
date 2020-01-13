@@ -1,9 +1,7 @@
-import csv
-import re
+import csv, re, time
 import mysql.connector
-import numpy
-import string
-import time
+import numpy as np
+
 
 def accessDB(command,text) :
 	if (command==0):
@@ -113,6 +111,7 @@ def main():
 	# accessDB(1,nameofDB) #OK
 	# accessDB(2, 7) #OK
 	accessDB(3,'next.txt')
+	print("Selesai ....")
 
 
 main()
