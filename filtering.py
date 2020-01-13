@@ -51,7 +51,7 @@ def DB_createTable(nfield):
 		if (field==0) :
 			curr.execute("CREATE TABLE recordType_"+str(field)+" (dates INT NOT NULL, timee INT NOT NULL, sequence INT NOT NULL, record_type INT NOT NULL, status  INT NOT NULL, messag VARCHAR (100))")
 		elif (field==1) :
-			curr.execute("CREATE TABLE recordType_"+str(field)+" (dates INT NOT NULL, timee INT NOT NULL, sequence INT NOT NULL, record_type INT NOT NULL, ord_time INT NOT NULL, ord_comm INT NOT NULL, sec_code VARCHAR(100), board_code VARCHAR(100), broker_code VARCHAR(100), prices INT NOT NULL, volume INT NOT NULL, balance INT NOT NULL, SB VARCHAR(100), ord_num INT NOT NULL, best_bp INT NOT NULL, best_bv INT NOT NULL, best_op INT NOT NULL, best_ov INT NOT NULL, link_order INT NOT NULL)")
+			curr.execute("CREATE TABLE recordType_"+str(field)+" (dates INT NOT NULL, timee INT NOT NULL, sequence INT NOT NULL, record_type INT NOT NULL, ord_time INT NOT NULL, ord_comm INT NOT NULL, sec_code VARCHAR(100), board_code VARCHAR(100), broker_code VARCHAR(10), prices INT NOT NULL, volume INT NOT NULL, balance INT NOT NULL, SB VARCHAR(100), ord_num INT NOT NULL, best_bp INT NOT NULL, best_bv INT NOT NULL, best_op INT NOT NULL, best_ov INT NOT NULL, link_order INT NOT NULL)")
 		elif (field==2) :
 			curr.execute("CREATE TABLE recordType_"+str(field)+" (dates INT NOT NULL, timee INT NOT NULL, sequence INT NOT NULL, record_type INT NOT NULL, status  INT NOT NULL, trade_time INT NOT NULL, trade_comm INT NOT NULL, sec_code VARCHAR(100), board_code VARCHAR(100), trade INT NOT NULL, prices INT NOT NULL, volume INT NOT NULL, buy_code VARCHAR(100), buy_type VARCHAR(100), sell_code VARCHAR(100), sell_type VARCHAR(100), BBP INT NOT NULL, BBV INT NOT NULL, BOP INT NOT NULL, BOV INT NOT NULL, buy_ord_no INT NOT NULL, sell_ord_no INT NOT NULL)")
 		elif (field==3) :
@@ -65,16 +65,18 @@ def DB_createTable(nfield):
 		print('DB DATAFEED :: tabel recordType_' + str(field) + ' !!')
 
 def DB_insertData(data):
-	mydb = mysql.connector.connect(
-		host = 'localhost',
-		user = 'root',
-		password = '',
-		database = 'datafeed_idx'
-		)
-	curr = mydb.cursor()
 	with open(data, 'rb') as f:
 		read= [l.decode('utf8', 'ignore') for l in f.readlines()]
 		# print(len(read))
+
+		mydb = mysql.connector.connect(
+			host = 'localhost',
+			user = 'root',
+			password = '',
+			database = 'datafeed_idx'
+		)
+		curr = mydb.cursor()
+
 		for x in range (len(read)):
 			row = re.split('\|',str(read[x])) # split data berdasarkan pipe
 			field=row[4]
@@ -82,24 +84,15 @@ def DB_insertData(data):
 			if (field=='0') :
 				data = (row[1:7]) #0
 				sql = """INSERT INTO recordtype_0 VALUES (%s,%s,%s,%s,%s,%s)"""
-				
-				# print(data)
-				# print(sql)
-				curr.execute(sql, data)
-				mydb.commit()
-				print('DB DATAFEED :: data recordType_' + field + ' !!')
 			elif (field=='1'):
 				data = (row[1:20]) #1 
 				sql = """INSERT INTO recordtype_1 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 			elif (field=='2'):
 				data = (row[1:23]) #2 
-				sql = """INSERT INTO recordtype_2 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s))"""
+				sql = """INSERT INTO recordtype_2 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 			elif (field=='3'):
-				data = (row[1:18]) #3
-				sql = """INSERT INTO recordtype_3 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-				curr.execute(sql, data)
-				mydb.commit()
-				print('DB DATAFEED :: data recordType_' + field + ' !!')
+				data = (row[1:19]) #3
+				sql = """INSERT INTO recordtype_3 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 			elif (field=='4'):
 				data = (row[1:8]) #4 
 				sql = """INSERT INTO recordtype_4 VALUES (%s,%s,%s,%s,%s,%s,%s)"""
@@ -108,48 +101,19 @@ def DB_insertData(data):
 				sql = """INSERT INTO recordtype_5 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 			elif (field=='6'):
 				data = (row[1:13]) #6
-				sql = """INSERT INTO recordtype_6 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-			# print(sql)
-			# print(data)
-			# print(field)
-			# curr.execute(sql, data)
-			# mydb.commit()
-			# print('DB DATAFEED :: data recordType_' + field + ' !!')
-	
+				sql = """INSERT INTO recordtype_6 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+			curr.execute(sql, data)
+			mydb.commit()
+			print('DB DATAFEED :: data recordType_' + field + ' !!')
 
-# def loadData(filename):
-# 	alldata = []
-# 	with open(filename, 'rb') as f:
-# 		read= [l.decode('utf8', 'ignore') for l in f.readlines()]
-# 		for x in range (1):
-# 			row = re.split('\|',str(read[x])) # split data berdasarkan pipe
-# 			field=row[4]
-# 			##### NAMA TABEL #####
-# 			if (field=='0') :
-# 				data = (row[1:7]) #0 
-# 			elif (field=='1'):
-# 				data = (row[1:20]) #1 
-# 			elif (field=='2'):
-# 				data = (row[1:23]) #2 
-# 			elif (field=='3'):
-# 				data = (row[1:18]) #3
-# 			elif (field=='4'):
-# 				data = (row[1:8]) #4 
-# 			elif (field=='5'):
-# 				data = (row[1:24]) #5
-# 			elif (field=='6'):
-# 				data = (row[1:13]) #6
-# 			alldata.append(data)
-# 	return alldata
 
 def main():
 	nameofDB = 'datafeed_idx'
 	# accessDB(0,nameofDB) #OK
 	# accessDB(1,nameofDB) #OK
 	# accessDB(2, 7) #OK
-	accessDB(3,'coba_100data.txt')
-	# file = 'next.txt'
-	# data = loadData(file)
+	accessDB(3,'next.txt')
+
 
 main()
 
