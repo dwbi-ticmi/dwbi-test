@@ -1,4 +1,8 @@
-import csv, re, time
+import csv
+import os
+import re
+import time
+import string
 import mysql.connector
 import numpy as np
 
@@ -35,15 +39,15 @@ def DB_testConn(nameDB):
 	curr = mydb.cursor()
 	print('DB DATAFEED :: OPEN DB '+nameDB)
 
-def DB_createTable(nfield):
+def DB_createTable(nameDB):
 	mydb = mysql.connector.connect(
 		host = 'localhost',
 		user = 'root',
 		password = '',
-		database = 'datafeed_idx'
+		database = 'cobasekarang'
 		)
 	curr = mydb.cursor()
-
+	nfield = 7 # MEMBUAT TABEL recordType_0 sampai recordType_6
 	for i in range (nfield) :
 		field = i
 		if (field==0) :
@@ -71,7 +75,7 @@ def DB_insertData(data):
 			host = 'localhost',
 			user = 'root',
 			password = '',
-			database = 'datafeed_idx'
+			database = 'cobasekarang'
 		)
 		curr = mydb.cursor()
 
@@ -104,14 +108,25 @@ def DB_insertData(data):
 			mydb.commit()
 			print('DB DATAFEED :: data recordType_' + field + ' !!')
 
+def DB_selectData(data):
+	
+	mydb = mysql.connector.connect(
+		host = 'localhost',
+		user = 'root',
+		password = '',
+		database = 'datafeed_idx'
+	)
+	curr = mydb.cursor()
+	sql = """SELECT * FROM recordtype_5"""
 
 def main():
-	nameofDB = 'datafeed_idx'
-	# accessDB(0,nameofDB) #OK
-	# accessDB(1,nameofDB) #OK
-	# accessDB(2, 7) #OK
-	accessDB(3,'next.txt')
-	print("Selesai ....")
+	nameofDB = 'cobasekarang'
+	# accessDB(0,nameofDB) #OK CREATE DB (nameofDB = datafeed_idx)
+	# accessDB(1,nameofDB) #OK TES KONEKSI DB
+	# accessDB(2,nameofDB) #OK BUAT TABEL [recordType_0 : recordType_6], nfield = 7
+	filename = 'sekarang.txt' #NAME FILE HARUS SESUAI DENGAN FILE TELNET TXT
+	accessDB(3,filename) #OTW DB INSERT DATA FROM FILE TELNET
+
 
 
 main()
