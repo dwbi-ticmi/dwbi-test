@@ -78,7 +78,7 @@ def DB_insertData(data):
 			database = 'cobasekarang'
 		)
 		curr = mydb.cursor()
-
+		x = 2
 		for x in range (len(read)):
 			row = re.split('\|',str(read[x])) # split data berdasarkan pipe
 			field=row[4]
@@ -124,9 +124,8 @@ def main():
 	# accessDB(0,nameofDB) #OK CREATE DB (nameofDB = datafeed_idx)
 	# accessDB(1,nameofDB) #OK TES KONEKSI DB
 	# accessDB(2,nameofDB) #OK BUAT TABEL [recordType_0 : recordType_6], nfield = 7
-	filename = 'sekarang.txt' #NAME FILE HARUS SESUAI DENGAN FILE TELNET TXT
+	filename = 'test_file.txt' #NAME FILE HARUS SESUAI DENGAN FILE TELNET TXT
 	accessDB(3,filename) #OTW DB INSERT DATA FROM FILE TELNET
-
 
 
 main()
